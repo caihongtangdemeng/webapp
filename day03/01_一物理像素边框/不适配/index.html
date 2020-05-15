@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>webapp</title>
+  <style type="text/less">
+    /* less的混合  像素比不同使用不同图片 */
+    .bg(@url){
+      background-image:url("@{url}@2x.png");
+      @media only screen  and(-webkit-device-pixel-ratio:3){
+        background-image: url("@{url}@3x.png");
+      }
+    }
+    .one-px(@color){
+      position: relative;
+      &::after{
+        content: "";
+        display: block;
+        width: 100%;
+        height: 1px;
+        background-color:@color;
+        position: absolute;
+        bottom: 0;
+        transform: scaleY(.5);
+        @media only screen and (--webkit-device-pixel-ratio:3){
+          transform:scaleY(.33333)
+        }
+      }
+    }
+    *{
+      margin:0;
+      padding: 0;
+    }
+    html,body{
+      height: 100%;
+      width: 100%;
+      overflow: hidden;
+    }
+    .wrap{
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
+      .header{
+        width: 100%;
+        height: 134px;
+        color:white;
+        .top{
+          box-sizing: border-box;
+          padding: 24px 12px 18px 24px;
+          background-color:rgba(7,17,27,0.5);
+          height: 106px;
+          .avatar{
+            float: left;
+            img{
+              width: 64px;
+              height: 64px;
+              border-radius: 2px;
+              margin-right: 16px;
+            }
+          }
+          .info{
+            float: left;
+            .title{
+              margin: 2px 0 8px 0;
+              .brand{
+                display: inline-block;
+                width: 30px;
+                height: 18px;
+                /* background-image: url(./img/brand@2x.png); */
+                .bg("./img/brand");
+                vertical-align:middle;
+                background-size:100%;
+                background-repeat:no-repeat;
+                margin-right: 6px;
+              }
+              .name{
+                font-size: 16px;
+                font-weight: bold;
+                line-height: 18px;
+              }
+            }
+            .desc{
+              font-size: 12px;
+              font-weight: 100px;
+              line-height: 12px;
+            }
+            .support{
+              margin:8px 0 2px 0;
+              font-size: 10px;
+              font-weight: 100;
+              line-height: 12px;
+              .icon{
+                display: inline-block;
+                margin-right: 4px;
+                width: 12px;
+                height: 12px;
+                /* background-image:url(./img/decrease_1@2x.png); */
+                .bg("./img/decrease_1");
+                vertical-align:middle;
+                background-size:100%;
+                background-repeat:no-repeat;
+              }
+             }
+          }
+        }
+        .bottom{
+          width: 100%;
+          height: 28px;
+          background-color: rgba(7,17,27,0.2);
+        }
+      }
+      .navs{
+        width: 100%;
+        height: 40px;
+        line-height: 40px;
+        .one-px(black);
+        .item{
+          float: left;
+          width: 33.33%;
+          height: 100%;
+          a{
+            font-size: 14px;
+            display: block;
+            text-decoration: none;
+            text-align: center;
+            width: 100%;
+            height: 100%;
+            color:rgb(77,85,93,1)
+          }
+        }
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <div class="header">
+      <div class="top">
+        <div class="avatar">
+          <img src="./img/avatar.jpg" alt="">
+        </div>
+        <div class="info">
+          <div class="title">
+            <i class="brand"></i><span class="name">粥品香坊（大运村）</span>
+          </div>
+          <div class="desc">
+            <span>蜂鸟专送/38分钟送达</span>
+          </div>
+          <div class="support">
+            <i class="icon"></i><span class="text">在线支付满28减5，满50减10</span>
+          </div>
+        </div>
+      </div>
+      <div class="bottom"></div>
+    </div>
+    <div class="navs">
+      <div class="item">
+        <a href="javascript:;">商品</a>
+      </div>
+      <div class="item">
+        <a href="javascript:;">评价</a>
+      </div>
+      <div class="item">
+        <a href="javascript:;">商家</a>
+      </div>
+    </div>
+
+  </div>
+</body>
+<script src="https://cdn.bootcdn.net/ajax/libs/less.js/3.11.1/less.min.js"></script>
+</html>
+
