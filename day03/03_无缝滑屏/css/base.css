@@ -1,26 +1,27 @@
-#wrap .swiper-wrap{
+.swiper-wrap{
   width: 100%;
   position: relative;
 }
-#wrap .swiper-wrap .list{
+.swiper-wrap .list{
   overflow: hidden;
   list-style: none;
   position: absolute;
 }
-#wrap .swiper-wrap .list li{
+.swiper-wrap .list li{
   float: left;
 }
-#wrap .swiper-wrap .list li img{
+ .swiper-wrap .list li img{
   width: 100%;
   display: block;
 }
-#wrap .swiper-wrap .point-wrap{
+.swiper-wrap .point-wrap{
   position: absolute;
   bottom: 0;
   width: 100%;
   text-align: center;
+  z-index: 9;
 }
-#wrap .swiper-wrap .point-wrap span{
+ .swiper-wrap .point-wrap span{
   display: inline-block;
   width: 14px;
   height: 14px;
@@ -28,6 +29,6 @@
   border-radius: 50%;
   margin-right: 3px;
 }
-#wrap .swiper-wrap .point-wrap span.active{
+ .swiper-wrap .point-wrap span.active{
   background-color: orange;
 }
