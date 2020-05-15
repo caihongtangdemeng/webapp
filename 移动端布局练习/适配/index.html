@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0,user-scalable=no,minimum-scale=1.0,maximum-scale=1.0">
+  <title>webapp</title>
+  <style type="text/less">
+    //1rem占据多少图位像素
+    @rem:750/16rem;
+    /* less的混合  像素比不同使用不同图片 */
+    .bg(@url){
+      background-image:url("@{url}@2x.png");
+      @media only screen  and(-webkit-device-pixel-ratio:3){
+        background-image: url("@{url}@3x.png");
+      }
+    }
+    *{
+      margin:0;
+      padding: 0;
+    }
+    html,body{
+      height: 100%;
+      width: 100%;
+      overflow: hidden;
+    }
+    .wrap{
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
+      .header{
+        width: 100%;
+        height: 268/@rem;
+        color:white;
+        .top{
+          box-sizing: border-box;
+          padding: 48/@rem 24/@rem 36/@rem 48/@rem;
+          background-color:rgba(7,17,27,0.5);
+          height: 212/@rem;
+          .avatar{
+            float: left;
+            img{
+              width: 128/@rem;
+              height: 128/@rem;
+              border-radius: 4/@rem;
+              margin-right: 32/@rem;
+            }
+          }
+          .info{
+            float: left;
+            .title{
+              margin: 4/@rem 0 16/@rem 0;
+              .brand{
+                display: inline-block;
+                width: 60/@rem;
+                height: 36/@rem;
+                /* background-image: url(./img/brand@2x.png); */
+                .bg("./img/brand");
+                vertical-align:middle;
+                background-size:100%;
+                background-repeat:no-repeat;
+                margin-right: 12/@rem;
+              }
+              .name{
+                font-size: 32/@rem;
+                font-weight: bold;
+                line-height: 36/@rem;
+              }
+            }
+            .desc{
+              font-size: 24/@rem;
+              font-weight: 200/@rem;
+              line-height: 24/@rem;
+            }
+            .support{
+              margin:20/@rem 0 4/@rem 0;
+              font-size: 20/@rem;
+              font-weight: 200/@rem;
+              line-height:24/@rem;
+              .icon{
+                display: inline-block;
+                margin-right: 8/@rem;
+                width:24/@rem;
+                height: 24/@rem;
+                /* background-image:url(./img/decrease_1@2x.png); */
+                .bg("./img/decrease_1");
+                vertical-align:middle;
+                background-size:100%;
+                background-repeat:no-repeat;
+              }
+             }
+          }
+        }
+        .bottom{
+          width: 100%;
+          height: 56/@rem;
+          background-color: rgba(7,17,27,0.2);
+        }
+      }
+      .navs{
+        width: 100%;
+        height: 80/@rem;
+        line-height: 80/@rem;
+        .item{
+          float: left;
+          width: 33.33%;
+          height: 100%;
+          a{
+            font-size: 28/@rem;
+            display: block;
+            text-decoration: none;
+            text-align: center;
+            width: 100%;
+            height: 100%;
+            color:rgb(77,85,93,1)
+          }
+        }
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <div class="header">
+      <div class="top">
+        <div class="avatar">
+          <img src="./img/avatar.jpg" alt="">
+        </div>
+        <div class="info">
+          <div class="title">
+            <i class="brand"></i><span class="name">粥品香坊（大运村）</span>
+          </div>
+          <div class="desc">
+            <span>蜂鸟专送/38分钟送达</span>
+          </div>
+          <div class="support">
+            <i class="icon"></i><span class="text">在线支付满28减5，满50减10</span>
+          </div>
+        </div>
+      </div>
+      <div class="bottom"></div>
+    </div>
+    <div class="navs">
+      <div class="item">
+        <a href="javascript:;">商品</a>
+      </div>
+      <div class="item">
+        <a href="javascript:;">评价</a>
+      </div>
+      <div class="item">
+        <a href="javascript:;">商家</a>
+      </div>
+    </div>
+
+  </div>
+</body>
+<script src="https://cdn.bootcdn.net/ajax/libs/less.js/3.11.1/less.min.js"></script>
+<script>
+   //目的: 将所有设备的布局视口 调整为16rem
+    //包括设计图 也以16rem来衡量
+   (function(){
+        var styleNode = document.createElement("style");
+        var w = document.documentElement.clientWidth/16;
+        styleNode.innerHTML = `html{font-size:${w}px!important}`;
+        document.head.appendChild(styleNode)
+    })()
+
+</script>
+</html>
+
