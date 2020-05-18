@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <meta name="viewport" content="width=device-width,initial-scale=1.0,user-scalable=no,minimum-scale=1.0,maximum-scale=1.0">
+    <style>
+        *{margin: 0;padding: 0;}
+        html,body{width: 100%;height: 100%;overflow: hidden;}
+        #wrap{width: 100%;height: 100%;overflow: hidden;}
+        li{list-style: none}
+        a{text-decoration: none}
+    </style>
+    <link rel="stylesheet" href="./css/base.css">
+</head>
+<body>
+    <div id="wrap">
+        <div class="nav-wrap"></div>
+    </div>
+</body>
+<script src="./js/transform.js"></script>
+<script src="./js/base.js"></script>
+<script>
+    window.onload=function () {
+        var wrap = document.querySelector("#wrap");
+        var arr = ["首页","MV","音乐","商城","饭团","咨询","网易云音乐","酷狗音乐","QQ音乐","酷我音乐",]
+
+        nav.init({
+            wrap:wrap,
+            arr:arr
+        })
+    }
+</script>
+</html>

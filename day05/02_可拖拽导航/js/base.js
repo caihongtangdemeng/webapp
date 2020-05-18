@@ -1,174 +1,154 @@
-//实现防抖动
-//判断用户上来的首次滑屏方向 如果是y轴方向 那以后不管怎么滑动都不会触发滑屏逻辑
-//判断用户上来的首次滑屏方向 如果是x轴方向 那以后不管怎么滑动都会触发滑屏逻辑
-
 (function (w) {
-  w.swiper={};
-  function init(wrap,arr) {
-    var styleNode=document.createElement("style");
-    var w=document.documentElement.clientWidth/16;
-    styleNode.innerHTML=`html{font-size:${w}px !important}`;
-    document.head.appendChild(styleNode)
-    wrap.addEventListener("touchstart",(ev)=>{
-      ev=ev||event;
-      ev.preventDefault();
-    })
-    slide(arr);
+  w.nav = {};
+
+  function init({wrap,arr}){
+
+      //挑选一个适配方案
+      var styleNode = document.createElement("style");
+      var w = document.documentElement.clientWidth/16;
+      styleNode.innerHTML = `html{font-size:${w}px!important}`;
+      document.head.appendChild(styleNode)
+      //禁止移动端事件的默认行为
+      wrap.addEventListener("touchstart",(ev)=>{
+          ev = ev || event;
+          ev.preventDefault();
+      })
+
+      layout(arr)
   }
-  function slide(arr) {
-    var swiperWrap=document.querySelector(".swiper-wrap");
-    var ulNode=document.createElement("ul");
-    css(ulNode,"translateZ",0);
-    var styleNode=document.createElement("style");
-    var pointWrap=document.querySelector(".swiper-wrap .point-wrap");
-    if(!swiperWrap){
-      throw new Error("页面缺少swiper-wrap这个滑屏区域");
-      return;
-    }
-    //小圆点逻辑
-    if(pointWrap){
-      pointWrap.size=arr.length;
+  function layout(arr){
+      //滑屏区域
+      var navWrap = document.querySelector(".nav-wrap");
+      //滑屏元素
+      //var list = document.querySelector(".nav-wrap > .list")
+      var list = document.createElement("ul");
+      transform.css(list,"translateZ",0);
+      list.classList.add("list");
       for(var i=0;i<arr.length;i++){
-        if(i===0){
-          pointWrap.innerHTML+="<span class='active'></span>"
-        }else{
-          pointWrap.innerHTML+="<span></span>"
-        }
+          list.innerHTML += "<li><a href='javascript:;'>"+(arr[i])+"</a></li>"
       }
-    }
-
-    //是否需要无缝
-    var needWF=swiperWrap.getAttribute("needWF");
-    if(needWF!==null){
-      arr=arr.concat(arr);
-    }
-    //创建滑屏元素
-    ulNode.classList.add("list");
-    for(var i=0;i<arr.length;i++){
-      ulNode.innerHTML+="<li><img src="+(arr[i])+"></li>"
-    }
-    swiperWrap.appendChild(ulNode);
-    styleNode.innerHTML=".swiper-wrap .list{width:"+(arr.length)+"00%}";
-    styleNode.innerHTML+=".swiper-wrap .list li{width:"+(100/arr.length)+"%}";
-    document.head.appendChild(styleNode);
-
-    var needAuto=swiperWrap.getAttribute("needAuto");
-    move(swiperWrap,ulNode,pointWrap,arr,needWF,needAuto);
-
-    if(needAuto!==null&&needWF!==null){
-      autoMove(ulNode,pointWrap,0,arr)
-    }
-  };
-  function move(wrap,node,pWrap,arr,needWF,needAuto) {
-    var eleStartX=0;
-    var eleStartY=0;
-    var touchStartX=0;
-    var touchStartY=0;
-    var touchDisX=0;
-    var touchDisY=0;
-    var index=0;
-    //防抖动需要的变量
-    var isFirst=true;//让一段逻辑只执行一次需要的变量
-    var isX=true;//用户的滑屏方向是否是x轴
+      navWrap.appendChild(list)
 
 
-    wrap.addEventListener("touchstart",function(ev){
-      ev=ev||event;
-      node.style.transition="";
-       //停掉自动滑屏
-      clearInterval(node.timer)
-      //手指一开始位置
-      var touchC=ev.changedTouches[0];
-      touchStartX=touchC.clientX;
-      touchStartY=touchC.clientY;
-      //无缝逻辑
-      if(needWF!==null){
-        var whichPic=css(node,"translateX")/document.documentElement.clientWidth;
-        if(whichPic===0){
-          whichPic=-pWrap.size;
-        }else if(whichPic===1-arr.length){
-          whichPic=1-pWrap.size;
-        }
-        css(node,"translateX",whichPic*document.documentElement.clientWidth);
-      }
+      move(navWrap,list);
+  }
+  function move(navWrap,list){
+      //导航往左滑可以滑到的最远的距离(负值 数值是最小的 在没有考虑橡皮筋效果的前提下能走的最远距离)
+      //滑屏元素是在滑屏区域内部滑动的;这个内部是滑屏区域不带边框的尺寸 : clientWidth
+      var minX = navWrap.clientWidth - list.offsetWidth;
 
-      //元素一开始位置要在无缝后
-      eleStartX=css(node,"translateX");
-      eleStartY=css(node,"translateY");
+      //滑屏元素一开始的位置 ; 手指一开始的位置
+      var eleStartX = 0;
+      var szStartX =0;
 
-      isFirst=true;
-      isX=true;
+      // 手指上一次touchmove完成时的位置 手指上一次touchmove完成时的时间点
+      // 每一次toucmove真正移动的距离 每一次toucmove完成的时间
+      var lastPoint = 0;
+      var lastTime = 0;
+      var pointDisX = 0;
+      var timeDisX = 0;
 
-    })
+      navWrap.addEventListener("touchstart",(ev)=>{
+          ev = ev || event;
+          var touchC = ev.changedTouches[0];
 
-    wrap.addEventListener("touchmove",function (ev) {
-      if(!isX){
-        return;
-      }
+          eleStartX = transform.css(list,"translateX");
+          szStartX  = touchC.clientX;
 
-      ev=ev||event;
-      var touchC=ev.changedTouches[0];
-      var touchNowX=touchC.clientX;
-      var touchNowY=touchC.clientY;
+          //touchstart时手指的位置
+          lastPoint =  touchC.clientX;
+          lastTime = new Date().getTime();
 
-      touchDisX=touchNowX-touchStartX;
-      touchDisY=touchNowY-touchStartY;
-      if(isFirst){
-        isFirst=false
-        if(Math.abs(touchDisY)>Math.abs(touchNowX)){
-          isX=false;
-          return;
-        }
-      }
+          //正常滑屏时取消动画 清除手动橡皮筋效果的标识
+          //重置pointDisX timeDisX 避免每次单纯点击导航时有意料之外的移动
+          list.style.transition="";
+          list.handMove = false;
+          pointDisX =0;
+          timeDisX =1; //避免出现nan 导致意想不到的bug
+      })
+      navWrap.addEventListener("touchmove",(ev)=>{
+          ev = ev || event;
+          var touchC = ev.changedTouches[0];
+
+          var nowPoint = touchC.clientX; //当次touchmove时 手指的位置
+          var nowTime = new Date().getTime();
+          pointDisX = nowPoint - lastPoint //当次touchmove 距离 上一次touchmove 我们手指移动的距离
+          timeDisX = nowTime - lastTime;
+          lastPoint = nowPoint;
+          lastTime = nowTime;
+
+          var szNowX = touchC.clientX;
+          var szDisX = szNowX - szStartX;
+          var translateX = eleStartX + szDisX;
+
+          //要实现橡皮筋效果 就是让pointDisX的有效距离 越来越小
+          //这个比例在每一次touchmove触发时应该要越来越小 (0,0.5]
+          var scale = 1;
+          if(translateX > 0){
+              //左侧橡皮筋效果的逻辑
+              list.handMove = true; //如果为true代表了进行了手动橡皮筋效果的
+              scale = document.documentElement.clientWidth / ((document.documentElement.clientWidth + translateX)*2.5);
+          }else if (translateX < minX) {
+              //右侧橡皮筋效果的逻辑
+              list.handMove = true;
+              var over = minX - translateX;
+              scale = document.documentElement.clientWidth / ((document.documentElement.clientWidth + over)*2.5);
+          }
+          translateX = transform.css(list,"translateX")+(pointDisX*scale);
+
+          transform.css(list,"translateX",translateX)
+      })
+      navWrap.addEventListener("touchend",()=>{
 
 
-      css(node,"translateX",eleStartX+touchDisX)
-    })
-    wrap.addEventListener("touchend",function () {
-      index=Math.round(css(node,"translateX")/document.documentElement.clientWidth);
-      if(index>0){
-        index=0
-      }else if(index < (1-arr.length)){
-        index=1-arr.length
-      }
-      if(pWrap){
-        var points=pWrap.querySelectorAll("span");
-        for(var i=0;i<points.length;i++){
-          points[i].classList.remove("active");
-        }
-        points[-index%pWrap.size].classList.add("active");
-      }
-      node.style.transition=".5s transform";
-      css(node,"translateX",index*document.documentElement.clientWidth);
-      if(needAuto!==null&&needWF!==null){
-        autoMove(node,pWrap,index)
-      }
-    })
-  };
-  function autoMove(node,pWrap,autoFlag,arr) {
-    clearInterval(node.timer);
-    node.timer=setInterval(function(){
-      node.style.transition=".5s transform linear"
-      autoFlag--;
-      css(node,"translateX",autoFlag*document.documentElement.clientWidth);
+          if(list.handMove){
+              //説明touchend事件触发时 是处于手动橡皮筋效果中的  --> 正常的回到边界位置即可
+              var translateX = transform.css(list,"translateX");
+              if(translateX > 0){
+                  //左侧橡皮筋
+                  translateX = 0;
+              }else if (translateX < minX) {
+                  //右侧橡皮筋
+                  translateX = minX;
+              }
+              list.style.transition = ".5s transform"
+              transform.css(list,"translateX",translateX);
+          }else{
+              //説明touchend事件触发时 手动橡皮筋效果没有被触发  --> 进行带橡皮筋效果的快速滑屏
+              fast()
+          }
 
-      if(pWrap){
-        var points=pWrap.querySelectorAll("span");
-        for(var i=0;i<points.length;i++){
-          points[i].classList.remove("active");
-        }
-        points[-autoFlag%pWrap.size].classList.add("active");
-      }
-    }, 2000);
-     //代码的执行是非常快的 界面的渲染是滞后的
-     node.addEventListener("transitionend",function() {
-       if(autoFlag===1-arr.length){
-         autoFlag=1-arr.length/2;
-         node.style.transition=""
-         css(node,"translateX",autoFlag*document.documentElement.clientWidth);
-       }
-     })
+
+          function fast() {
+              //最后一次touchmove的平均速度
+              var speed = pointDisX / timeDisX;
+              speed = Math.abs(speed) < 0.5 ? 0 : speed;
+              //根据速度让滑屏元素在单位时间内滑的距离有远有近
+              //速度的正负号代表的是滑屏方向
+              //速度大 : 在单位时内滑的距离远一点
+              //速度小 : 在单位时内滑的距离近一点
+
+              //手指抬起时  如果发现两侧有橡皮筋拉出的拒绝  我们需要弹回去
+              //手指抬起时,list它的位置
+              var translateX = transform.css(list,"translateX");
+              translateX = translateX + speed*200;
+
+              //快速滑屏的橡皮筋效果 要借助于贝塞尔曲线
+              var bsr = "";
+              if(translateX > 0){
+                  //左侧橡皮筋
+                  translateX = 0;
+                  bsr = "cubic-bezier(.06,1.85,.83,1.75)";
+              }else if (translateX < minX) {
+                  //右侧橡皮筋
+                  translateX = minX;
+                  bsr = "cubic-bezier(.06,1.85,.83,1.75)";
+              }
+              list.style.transition = ".5s "+(bsr)+" transform"
+              transform.css(list,"translateX",translateX);
+          }
+      })
   }
 
-  w.swiper.init=init
+  w.nav.init = init;
 })(window)
