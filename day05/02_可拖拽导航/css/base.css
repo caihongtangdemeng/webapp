@@ -1,0 +1,21 @@
+.nav-wrap{
+  width: 100%;
+  height: 50px;
+  padding: 10px 0 3px 0;
+  background: #eee;
+}
+.nav-wrap .list{
+  float: left;
+  white-space: nowrap;
+  font-size: 0;
+}
+.nav-wrap .list>li{
+  display: inline-block;
+  padding: 0 10px;
+  height: 40px;
+  line-height: 40px;
+}
+.nav-wrap .list>li>a{
+  font-size: 22px;
+  color: black;
+}
