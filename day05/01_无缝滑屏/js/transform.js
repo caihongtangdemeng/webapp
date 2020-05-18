@@ -11,20 +11,20 @@
           case "translateX":
           case "translateY":
           case "translateZ":
-            text+=key+"("+(node.transform[key])+"px)";
+            text += key + "("+(node.transform[key])+"px)";
             break;
           
           case "rotate":
           case "rotateX":
           case "rotateY":
           case "rotateZ":
-            text +=key+"("+(node.transform[key])+"deg)";
+            text += key + "("+(node.transform[key])+"deg)";
             break;
 
           case "scale":
           case "scaleX":
           case "scaleY":
-            text+=key+"("+(node.transform[key])+")";
+            text += key + "("+(node.transform[key])+")";
             break;
         }
       }
