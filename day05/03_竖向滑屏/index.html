@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1.0,user-scalable=no,minimum-scale=1.0,maximum-scale=1.0">
+  <title>Document</title>
+  <style>
+    *{margin: 0;padding: 0;}
+    html,body{width: 100%;height: 100%;overflow: hidden;}
+    #wrap{width: 100%;height: 100%;text-align: center;background: pink;overflow: hidden;position: relative}
+    #wrap .bar{
+      width: 4px;
+      height: 40px;
+      background: gray;
+      position: absolute;
+      right: 0;
+      top: 0;
+      opacity: 0;
+      transition: 1s opacity;
+
+    }
+  </style>
+</head>
+<body>
+  <div id="wrap">
+    <div class="content"></div>
+    <div class="bar"></div>
+  </div>
+</body>
+<script src="./js/base.js"></script>
+<script src="./js/transform.js"></script>
+<script>
+  /*
+        0. 实现防抖动
+        1. 实现橡皮筋效果
+        2. 实现快速滑屏
+        3. 实现即点即停(基于tween算法)
+        4. 实现滚动条 (自定义滚动条)
+    */
+
+  window.onload=function(){
+    var wrap=document.querySelector("#wrap");
+    var content=document.querySelector(".content");
+    var bar =document.querySelector(".bar");
+    for(var i=0;i<200;i++){
+      content.innerHTML+='小猪佩奇'+(i)+'<br/>';
+    }
+    //竖向滑屏  钩子函数 希望钩子中的this指向滑屏元素
+    scroll.init({
+      wrap:wrap,
+      start(){
+         //当用户点击到整个滑屏区域的时候 触发
+                /*
+                    动态的计算滚动条的高度
+                    滚动条的高度/视口的高度 = 滑屏区域的高度/滑屏元素的高度
+                    滚动条的高度 = (滑屏区域的高度/滑屏元素的高度) * 视口的高度
+                */
+            var scale= (wrap.clientHeight/this.offsetHeight);
+            bar.style.height=scale*document.documentElement.clientHeight+"px";
+            bar.style.opacity=1;
+      },
+      move(){
+        //当整个滑屏元素在滑动时触发
+                /*
+                    滑屏元素在滑动明时 让滚动条反方向移动
+                    滚动条滑动的实时距离 / 滚动条可以滑动的最远距离
+                        = 滑屏元素滑动的实时距离/滑屏元素可以滑动的最远距离
+                */
+          var scale=transform.css(this,"translateY")/(this.offsetHeight-document.documentElement.clientHeight);
+          var barMax=document.documentElement.clientHeight-bar.offsetHeight;
+          transform.css(bar,"translateY",-scale*barMax)
+      },
+      end(){
+
+      },
+      over(){
+        bar.style.opacity=0;
+      }
+    })
+  }
+</script>
+</html>
