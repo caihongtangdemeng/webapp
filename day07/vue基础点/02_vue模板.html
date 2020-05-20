@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+    <div id="app">
+        <span>{{msg}}</span>
+    </div>
+</body>
+<script src="./js/vue.js"></script>
+<script>
+
+    /*
+       1. 判断有没有el选项 有
+       2. 判断有没有template选项 有
+       3. 将template作为模板进行解析
+       4. 将解析完的节点 覆盖掉整个el
+   */
+    /*var vm = new Vue({
+        //el:"#app",
+        template:"<div id='app'><i>{{msg}}</i></div>",
+        data:{
+            msg:"hello vue"
+        }
+    })
+    vm.$mount("#app")*/
+
+
+    /*
+        1. 判断有没有el选项 有
+        2. 判断有没有template选项 没有
+        3. 将el的outerhtml 作为模板进行解析
+        4. 将解析完的节点 覆盖掉整个el
+    */
+    var vm = new Vue({
+        //el:"#app",
+        data:{
+            msg:"hello vue"
+        }
+    })
+    vm.$mount("#app")
+</script>
+</html>

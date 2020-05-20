@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+    <div id="app"></div>
+</body>
+<script src="./js/vue.runtime.js"></script>
+<script>
+
+   /* render:function(createElement){
+        retrun createElement("span","----")
+    }
+
+    render:function(createElement){
+        retrun createElement({
+            name:"xxx"
+        })
+    }*/
+
+
+    Vue.config.productionTip = false;
+    var vm = new Vue({
+        el:"#app",
+        render:function(h){
+             return h({
+                 name:"damu",
+                 data(){
+                     return {
+                         msg:"达姆"
+                     }
+                 },
+                 render:function (h) {
+                     return h("span",this.msg)
+                 }
+             })
+        }
+    })
+</script>
+</html>

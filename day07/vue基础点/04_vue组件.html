@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+    <div id="app">
+        <damu></damu>
+    </div>
+</body>
+<script src="./js/vue.js"></script>
+<script>
+    Vue.config.productionTip = false;
+    var vm = new Vue({
+        el:"#app",
+        components:{
+           damu:{
+               name:"damu",
+               template:"<span>damu</span>"
+           }
+        }
+    })
+</script>
+</html>

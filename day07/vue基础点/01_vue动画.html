@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+  <style>
+    #test{
+      width: 100px;
+      height: 100px;
+      text-align: center;
+      line-height: 100px;
+      position: absolute; 
+      left: 0;
+      right: 0;
+      top: 0;
+      bottom: 0;
+      margin: auto;
+      background: pink;
+      opacity: 1;
+      /* transition: 3s opacity; */
+    }
+    .v-enter{opacity: 0 !important; background: gray !important;}
+    .v-enter-active{transition: 2s all;}
+    .v-enter-to{opacity: 1 !important; }
+
+    .v-leave{} 
+    .v-leave-active{transition: 2s all;}
+    .v-leave-to{opacity: 0 !important; background: gray;}
+  </style>
+</head>
+<body>
+  <div id="app">
+    <button @click="flag=!flag">click me</button>
+    <transition>
+      <div id="test" v-show="flag">
+        {{msg}}
+      </div>
+    </transition>
+  </div>
+
+</body>
+<script src="./js/vue.js"></script>
+<script>
+  var vm=new Vue({
+    el:"#app",
+    data:{
+      msg:"hello vue",
+      flag:true
+    }
+  })
+</script>
+</html>
